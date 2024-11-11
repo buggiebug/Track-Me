@@ -33,7 +33,7 @@ export default TransactionHome = () => {
     }, [loadingStatus, loadingModal]);
 
     const { expensesData, expenseStats } = useMemo(() => {
-        if (Array.isArray(expenseData?.expenses) && expenseData.expenses.length > 0) {
+        if (Array.isArray(expenseData?.expenses) && expenseData?.expenses.length > 0) {
             return {
                 expensesData: expenseData.expenses,
                 expenseStats: expenseData.stats

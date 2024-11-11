@@ -8,6 +8,9 @@ import { createExpense } from '../../redux/slice/expenseSlice';
 
 export default AddTransaction = () => {
 
+    // Dynamic form
+    const dynamicFor = "Borrowed";
+
     const dispatch = useDispatch();
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [readDateState, setReadDateState] = useState('');
@@ -31,7 +34,7 @@ export default AddTransaction = () => {
         status: 'Completed',
         transactionDate: '',
     }
-    const [formData, setFormData] = useState({...formInitialState});
+    const [formData, setFormData] = useState({ ...formInitialState });
 
     const handleInputChange = (field, value) => {
         setFormData({ ...formData, [field]: value });
@@ -44,7 +47,7 @@ export default AddTransaction = () => {
     }
 
     const handleClearForm = () => {
-        setFormData({...formInitialState});
+        setFormData({ ...formInitialState });
         setReadDateState("");
     }
 
@@ -92,7 +95,7 @@ export default AddTransaction = () => {
                 </Picker>
 
                 {
-                    formData.transactionType === "Borrowed" ?
+                    formData.transactionType === dynamicFor ?
                         <View>
 
                             <Text style={styles.label}>Settlement</Text>
@@ -149,38 +152,49 @@ export default AddTransaction = () => {
                                 value={formData.cashback}
                                 onChangeText={(value) => handleInputChange('cashback', value)}
                             />
-
-                            <Text style={styles.label}>Pay Using</Text>
-                            <Picker
-                                selectedValue={formData.payUsing}
-                                onValueChange={(value) => handleInputChange('payUsing', value)}
-                                style={styles.picker}
-                            >
-                                <Picker.Item label="Select payment method" value="" />
-                                <Picker.Item label="Cash" value="Cash" />
-                                <Picker.Item label="Paytm" value="Paytm" />
-                                <Picker.Item label="GPay" value="GPay" />
-                                <Picker.Item label="IMPS" value="IMPS" />
-                                <Picker.Item label="UPI" value="UPI" />
-                                <Picker.Item label="PayPal" value="PayPal" />
-                                <Picker.Item label="AmazonPay" value="AmazonPay" />
-                                <Picker.Item label="PhonePe" value="PhonePe" />
-                            </Picker>
-
-                            <Text style={styles.label}>Category</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter category"
-                                value={formData.category}
-                                onChangeText={(value) => handleInputChange('category', value)}
-                            />
-
-                            <Text style={styles.label}>Recurring</Text>
-                            <Switch
-                                value={formData.recurring}
-                                onValueChange={(value) => handleInputChange('recurring', value)}
-                            />
                         </View>
+                }
+
+                {
+                    (formData.transactionType !== dynamicFor || formData.isSettled) &&
+                    <View>
+                        <Text style={styles.label}>Pay Using</Text>
+                        <Picker
+                            selectedValue={formData.payUsing}
+                            onValueChange={(value) => handleInputChange('payUsing', value)}
+                            style={styles.picker}
+                        >
+                            <Picker.Item label="Select payment method" value="" />
+                            <Picker.Item label="Cash" value="Cash" />
+                            <Picker.Item label="Paytm" value="Paytm" />
+                            <Picker.Item label="GPay" value="GPay" />
+                            <Picker.Item label="IMPS" value="IMPS" />
+                            <Picker.Item label="UPI" value="UPI" />
+                            <Picker.Item label="PayPal" value="PayPal" />
+                            <Picker.Item label="AmazonPay" value="AmazonPay" />
+                            <Picker.Item label="PhonePe" value="PhonePe" />
+                            <Picker.Item label="Other" value="Other" />
+                        </Picker>
+                    </View>
+                }
+
+                {
+                    formData.transactionType !== dynamicFor &&
+                    <View>
+                        <Text style={styles.label}>Category</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter category"
+                            value={formData.category}
+                            onChangeText={(value) => handleInputChange('category', value)}
+                        />
+
+                        <Text style={styles.label}>Recurring</Text>
+                        <Switch
+                            value={formData.recurring}
+                            onValueChange={(value) => handleInputChange('recurring', value)}
+                        />
+                    </View>
                 }
 
 
@@ -253,7 +267,7 @@ export default AddTransaction = () => {
                     <Text>Reset</Text>
                 </TouchableOpacity>
             </View>
-        </ScrollView>
+        </ScrollView >
     );
 };
 
@@ -287,7 +301,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginBottom: 12,
-
     },
 
     picker: {

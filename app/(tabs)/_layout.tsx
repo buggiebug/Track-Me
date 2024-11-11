@@ -12,12 +12,9 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'dark'].tabIconSelected,
         headerShown: false,
         tabBarShowLabel: false,
-        headerStyle: {
-          backgroundColor: "red",
-        }
       }}>
       <Tabs.Screen
         name="index"
@@ -37,12 +34,11 @@ export default function TabLayout() {
           headerShown: true,
           title: 'Add Transaction',
           headerStyle: {
-            backgroundColor: "white",
             elevation: 0,
             shadowOpacity: 0,
           },
-          headerTitleAlign: "center", 
-          headerTintColor: "black", 
+          headerTitleAlign: "center",
+          headerTintColor: "black",
           headerStatusBarHeight: 0,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
@@ -59,7 +55,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'person' : 'person-outline'}
-              color={"color"}
+              color={color}
             />
           ),
         }}

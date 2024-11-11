@@ -10,13 +10,12 @@ export default TransactionOverview = ({ expenseStats }) => {
     return (
         <ScrollView horizontal={true}>
             <View style={[styles.transactionOverview, { width: isLargeScreen ? 480 : 550 }]}>
-
                 <View style={styles.section}>
                     <View style={styles.imageContainer}>
                         <Text style={styles.imageText}>{expenseStats?.totalIncome}</Text>
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={[styles.percentage, styles.incomeText]}>+{expenseStats?.incomePercentage}%</Text>
+                        <Text style={[styles.percentage, styles.incomeText]}>{expenseStats?.incomePercentage > 0 ? "+" : ""}{expenseStats?.incomePercentage}%</Text>
                         <Text style={styles.label}>Income</Text>
                     </View>
                 </View>
@@ -26,25 +25,20 @@ export default TransactionOverview = ({ expenseStats }) => {
                         <Text style={styles.imageText}>{expenseStats?.totalExpense}</Text>
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={[styles.percentage, styles.expenseText]}>-{expenseStats?.expensePercentage}%</Text>
+                        <Text style={[styles.percentage, styles.expenseText]}>{expenseStats?.expensePercentage < 0 ? "-" : ""}{expenseStats?.expensePercentage}%</Text>
                         <Text style={styles.label}>Expense</Text>
                     </View>
                 </View>
 
-                {
-                    
-                    expenseStats?.totalBorrowed &&
-                    <View style={styles.section}>
-                        <View style={styles.imageContainer}>
-                            <Text style={styles.imageText}>{expenseStats?.totalBorrowed}</Text>
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Text style={[styles.percentage, styles.borrowedText]}>+{expenseStats?.borrowedPercentage}%</Text>
-                            <Text style={styles.label}>Borrowed</Text>
-                        </View>
+                <View style={styles.section}>
+                    <View style={styles.imageContainer}>
+                        <Text style={styles.imageText}>{expenseStats?.totalBorrowed}</Text>
                     </View>
-                }
-
+                    <View style={styles.textContainer}>
+                        <Text style={[styles.percentage, styles.borrowedText]}>{expenseStats?.borrowedPercentage > 0 ? "+" : ""}{expenseStats?.borrowedPercentage}%</Text>
+                        <Text style={styles.label}>Borrowed</Text>
+                    </View>
+                </View>
             </View>
         </ScrollView>
 
@@ -94,7 +88,7 @@ const styles = StyleSheet.create({
         width: 60,
     },
     percentage: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
 
     },

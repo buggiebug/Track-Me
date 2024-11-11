@@ -1,17 +1,41 @@
-import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native"
+import { useEffect, useState } from "react";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import { getUser } from "../../redux/slice/authSlice";
 import GetImage from "../utils/GetImage";
 import { selectUserDetails } from "../../redux/reselect/reselectData";
 import { HelloWave } from "../animated/HelloWave";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default ProfileScreen = () => {
     const dispatch = useDispatch();
     const { loadingStatus, userData } = useSelector(selectUserDetails);
 
+    const [userToken, setUserToken] = useState("");
+    
+    const handleSubmit = async() => {
+        try {
+            if (userToken) {
+                // Save URL to AsyncStorage
+                await AsyncStorage.setItem('userToken', userToken);
+                console.log('User Token saved:', userToken);
+                setUserToken('');
+                alert("User Token saved");
+            } else {
+                // Retrieve URL from AsyncStorage
+                const savedToken = await AsyncStorage.getItem('userToken');
+                if (savedToken) {
+                    console.log('Retrieved User Token:', savedToken);
+                    setUserToken(savedToken);
+                }
+            }
+        } catch (error) {
+            console.error('Error accessing AsyncStorage', error);
+        }
+    }
+
     useEffect(() => {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjY5OTZkZDljNjI4ZDRhNjZkMDhmNyIsImlhdCI6MTczMDYzMjU2Mn0.o2seyNx5ZTlBnqMC1FMWwhBr78VjeYgapka47XYDGmc";
+        const token = userToken || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzIwNDQ4ZmUyN2Q5NGRhOWQ3NGM2OSIsImlhdCI6MTczMTMzMTE0NH0.NYx4HYI8KMfo3_hqAKpQJcoVZrLpb_eZFj-mf_IBt0w";
         dispatch(getUser(token));
     }, []);
 
@@ -21,7 +45,7 @@ export default ProfileScreen = () => {
                 Profile
             </Text>
 
-            <HelloWave/>
+            <HelloWave />
 
             <Text style={styles.loadingStatus}>{loadingStatus}</Text>
 
@@ -43,6 +67,17 @@ export default ProfileScreen = () => {
                     </View>
 
                 </View>
+
+            </View>
+            <View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="URL"
+                    value={userToken}
+                    keyboardType="twitter"
+                    onChangeText={(value) => setUserToken(value)}
+                />
+                <Button title="Save" onPress={() => handleSubmit()} />
             </View>
         </View>
     )
@@ -113,4 +148,13 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
 
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        backgroundColor: "#fff",
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 12,
+        width: "100vw",
+    }
 });
