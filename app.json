@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.buggiebug.expensetracker"
+      "package": "com.buggiebug.expensetracker",
+      "jsEngine": "hermes"
     },
     "web": {
       "bundler": "metro",

@@ -104,8 +104,8 @@ export default AddTransaction = () => {
                                 <Switch
                                     value={formData.isSettled}
                                     onValueChange={(value) => handleInputChange('isSettled', value)}
-                                    trackColor={{ true: 'green', false: 'grey' }}
-                                    thumbColor={formData.isSettled ? 'green' : 'grey'}
+                                    trackColor={{ true: '#5DA271', false: 'grey' }}
+                                    thumbColor={formData.isSettled ? '#5DA271' : 'grey'}
                                 />
                                 <Text style={{ paddingHorizontal: 10 }}>Yes</Text>
                             </View>
