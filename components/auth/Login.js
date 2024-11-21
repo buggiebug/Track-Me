@@ -2,12 +2,28 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 
-export default Login = () => {
+const BASE_URL = "https://gprglhk7-4000.inc1.devtunnels.ms";
 
-  const [loginDataState, setLoginDataState] = useState({ mobile: "9120226043", password: "Bug@12345" });
+export default Login = ({ loginFun }) => {
+
+  const [loginDataState, setLoginDataState] = useState({ mobile: "9120226043", password: "12345678" });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const submitLogin = () => {
-    alert(JSON.stringify(loginDataState));
+  const submitLogin = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify(loginDataState)
+      });
+      const data = await response.json();
+      if (data?.success) {
+        loginFun(data.data);
+      } else {
+        console.error(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -82,14 +98,15 @@ export default Login = () => {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
-    // backgroundColor: "#0B192C",
-    // justifyContent: "center",
+    backgroundColor: "#0B192C",
+    justifyContent: "center",
+    paddingHorizontal: 10,
   },
 
   // Heading...
   heading: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 60,
   },
   headingText: {
     fontSize: 28,

@@ -52,13 +52,13 @@ export default ProfileScreen = () => {
             <View style={{ flex: 1 }}>
                 <View style={styles.header}>
                     {GetImage("user", styles.avatar)}
-                    <Text style={styles.name}>{userData.name}</Text>
+                    <Text style={styles.name}>{userData.name || "buggIe"}</Text>
                 </View>
 
                 <View style={styles.detailsContainer}>
                     <View style={styles.detailItem}>
                         <Text style={styles.label}>Mobile:</Text>
-                        <Text style={styles.value}>{userData.mobile}</Text>
+                        <Text style={styles.value}>{userData.mobile || "1234567890"}</Text>
                     </View>
 
                     <View style={styles.detailItem}>
@@ -69,7 +69,7 @@ export default ProfileScreen = () => {
                 </View>
 
             </View>
-            <View>
+            {/* <View>
                 <TextInput
                     style={styles.input}
                     placeholder="URL"
@@ -78,7 +78,7 @@ export default ProfileScreen = () => {
                     onChangeText={(value) => setUserToken(value)}
                 />
                 <Button title="Save" onPress={() => handleSubmit()} />
-            </View>
+            </View> */}
         </View>
     )
 };

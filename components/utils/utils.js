@@ -18,5 +18,5 @@ export default class Utils {
         const date = new Date();
         const options = { timeZone: "Asia/Kolkata", hour12: true, hour: "numeric", minute: "numeric" };
         return date.toLocaleString("en-IN", options);
-    }
+    }   
 }
