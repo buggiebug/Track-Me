@@ -17,8 +17,9 @@ export const selectExpenseDetails = createSelector(
 export const selectUserDetails = createSelector(
     [selectUser],
     (userDetails) => ({
-        userData: userDetails?.userData,
+        isLoggedInUser: userDetails?.isLoggedIn,
         loadingStatus: userDetails?.loadingStatus,
         loadingModal: userDetails?.loadingModal,
+        userData: userDetails?.userData,
     })
 );

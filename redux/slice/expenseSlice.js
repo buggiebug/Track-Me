@@ -1,9 +1,9 @@
+import localStorage from '@/components/utils/localStorage';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 
 import axio from "axios";
 const BASE_URL = "https://gprglhk7-4000.inc1.devtunnels.ms";
-
 
 // Define initial state
 const initialState = {
@@ -17,15 +17,16 @@ const initialState = {
 // Get ALl Expenses...
 export const getAllExpenses = createAsyncThunk(
   "expenses/getAllExpenses",
-  async (token, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const { data } = await axio.get(`${BASE_URL}/user/expense`, {
         headers: {
-          token
+          token: await localStorage.getItem('userToken')
         }
       });
       return data;
     } catch (error) {
+      console.log(error);
       // Capture error message and reject with value
       const errorMessage = error.response?.data?.message || error.message || "An unknown error occurred.";
       return rejectWithValue(errorMessage);
@@ -36,12 +37,12 @@ export const getAllExpenses = createAsyncThunk(
 // Create new Expenses...
 export const createExpense = createAsyncThunk(
   "expenses/createExpense",
-  async ({ formData, token }, { rejectWithValue }) => {
+  async ({ formData }, { rejectWithValue }) => {
     console.log(formData);
     try {
       const { data } = await axio.post(`${BASE_URL}/user/expense/create`, formData, {
         headers: {
-          token
+          token: await localStorage.getItem('userToken')
         }
       });
       return data;

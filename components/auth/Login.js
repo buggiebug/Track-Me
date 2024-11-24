@@ -1,26 +1,23 @@
+import { selectUserDetails } from '@/redux/reselect/reselectData';
+import { loginUser } from '@/redux/slice/authSlice';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 const BASE_URL = "https://gprglhk7-4000.inc1.devtunnels.ms";
 
-export default Login = ({ loginFun }) => {
+export default Login = () => {
+
+  const dispatch = useDispatch();
+  const { loadingStatus, loadingModal } = useSelector(selectUserDetails);
 
   const [loginDataState, setLoginDataState] = useState({ mobile: "9120226043", password: "12345678" });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  
   const submitLogin = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/auth/login`, {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify(loginDataState)
-      });
-      const data = await response.json();
-      if (data?.success) {
-        loginFun(data.data);
-      } else {
-        console.error(data);
-      }
+      dispatch(loginUser(loginDataState));
     } catch (error) {
       console.error(error);
     }
@@ -84,11 +81,13 @@ export default Login = ({ loginFun }) => {
           onPress={submitLogin}
           style={[
             styles.button,
-            { backgroundColor: loginDataState.mobile.length < 10 || !loginDataState.password ? '#686D76' : '#4CAF50' } // Green color for Submit
+            { backgroundColor: loginDataState.mobile.length < 10 || loginDataState.password?.length < 8 ? '#686D76' : '#4CAF50' } // Green color for Submit
           ]}
           disabled={loginDataState.mobile.length < 10 || !loginDataState.password}
         >
-          <Text style={styles.buttonText}>Submit</Text>
+        <Text style={styles.buttonText} disabled={loadingStatus === "loading" && loadingModal === "login" ? true : false }>
+          {loadingStatus === "loading" && loadingModal === "login" ? "Loading..." : "Submit"}
+        </Text>
         </TouchableOpacity>
       </View>
     </View>
