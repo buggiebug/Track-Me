@@ -10,13 +10,14 @@ const BASE_URL = "https://gprglhk7-4000.inc1.devtunnels.ms";
 export default Login = () => {
 
   const dispatch = useDispatch();
-  const { loadingStatus, loadingModal } = useSelector(selectUserDetails);
+  const { loadingStatus, loadingModal, isLoggedInUser } = useSelector(selectUserDetails);
 
   const [loginDataState, setLoginDataState] = useState({ mobile: "9120226043", password: "12345678" });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   
   const submitLogin = async () => {
     try {
+      console.log("isLoggedInUser >>>>", isLoggedInUser);
       dispatch(loginUser(loginDataState));
     } catch (error) {
       console.error(error);
