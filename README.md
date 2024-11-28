@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# Welcome to Expense Tracker app 👋
 
 ## Get started
 
 1. Install dependencies
 
    ```bash
-   npm install
+   npm i / npm ci
    ```
 
 2. Start the app
 
    ```bash
-    npx expo start
+    npm run start
    ```
 
-In the output, you'll find options to open the app in a
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## BUNDLE THE APK
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+STEP 1.
 
-## Get a fresh project
+Login with [eas](https://expo.dev/login) in your project 
 
-When you're ready, run:
+STEP 2:
 
-```bash
-npm run reset-project
-```
+RUN: `eas build -p android`    
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+STEP 3:
 
-## Learn more
+Download [Bundle Tool](https://github.com/google/bundletool/releases) and your file.aab file which is generate by eas, move them into a folder called output and goto inside the output directory
 
-To learn more about developing your project with Expo, look at the following resources:
+STEP 4:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+    Generate Signed APKs using:
 
-## Join the community
+    keytool -genkeypair -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
 
-Join our community of developers creating universal apps.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+STEP 5:
+
+Run the Bundletool Command with Keystore 
+
+    java -jar bundletool-all-1.17.2.jar build-apks --bundle=expense_tracker.aab --output=expense_tracker.apks --mode=universal --ks=my-release-key.jks --ks-key-alias=my-key-alias --ks-pass=pass:12345678
+
+
+STEP 6:
+
+    Extract the APK Once the .apks file is created, extract the APK using the manual method
+
+    The .apks file is a ZIP archive. You can manually extract its contents to locate the universal APK:
+
+    1. Rename expense_tracker.apks to expense_tracker.zip.
+    2. Extract it using any ZIP tool.
+    3. Find the universal APK in the universal directory.
+
