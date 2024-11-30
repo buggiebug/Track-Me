@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { Icons } from '@/components/utils/Icons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -20,7 +20,7 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
+            <Icons
               name={focused ? 'home' : 'home-outline'}
               color={color}
             />
@@ -40,7 +40,7 @@ export default function TabLayout() {
           headerTintColor: "black",
           headerStatusBarHeight: 0,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
+            <Icons
               name={focused ? 'add-circle' : 'add-circle-outline'}
               color={color}
             />
@@ -52,7 +52,7 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
+            <Icons
               name={focused ? 'person' : 'person-outline'}
               color={color}
             />

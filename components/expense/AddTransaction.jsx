@@ -167,12 +167,14 @@ export default AddTransaction = () => {
                             <Picker.Item label="Select payment method" value="" />
                             <Picker.Item label="Cash" value="Cash" />
                             <Picker.Item label="Paytm" value="Paytm" />
-                            <Picker.Item label="GPay" value="GPay" />
+                            <Picker.Item label="GooglePay" value="GooglePay" />
                             <Picker.Item label="IMPS" value="IMPS" />
                             <Picker.Item label="UPI" value="UPI" />
                             <Picker.Item label="PayPal" value="PayPal" />
                             <Picker.Item label="AmazonPay" value="AmazonPay" />
                             <Picker.Item label="PhonePe" value="PhonePe" />
+                            <Picker.Item label="Credit Card" value="Credit Card" />
+                            <Picker.Item label="Debit Card" value="Debit Card" />
                             <Picker.Item label="Other" value="Other" />
                         </Picker>
                     </View>

@@ -11,17 +11,17 @@ export default function App() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
     const { isLoggedInUser } = useSelector(selectUserDetails);
 
-    
+
     useEffect(() => {
         const checkToken = async () => {
             const token = await localStorage.getItem("userToken");
-            if(!(token && token.length > 0)) {
+            if (!(token && token.length > 0)) {
                 setIsAuthenticated(false);
             }
         };
         checkToken();
     });
-    
+
     useEffect(() => {
         console.log("isLoggedInUser >>>", isLoggedInUser);
         const checkToken = async () => {

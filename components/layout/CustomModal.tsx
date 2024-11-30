@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, Modal, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
-import { TabBarIcon } from '../navigation/TabBarIcon';
+import { Icons } from '../utils/Icons';
 
 export function CustomModal({ children, title, modalVisible, setModalVisible }: any) {
   return (
@@ -30,7 +30,7 @@ export function CustomModal({ children, title, modalVisible, setModalVisible }: 
                   style={[styles.button, styles.buttonClose]}
                   onPress={() => setModalVisible(!modalVisible)}>
                   <Text style={styles.textStyle}>
-                    <TabBarIcon name='close-circle-outline' color='red' />
+                    <Icons name='close-circle-outline' color='red' />
                   </Text>
                 </Pressable>
               </View>

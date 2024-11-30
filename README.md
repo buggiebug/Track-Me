@@ -31,7 +31,7 @@ Download [Bundle Tool](https://github.com/google/bundletool/releases) and your f
 
 STEP 4:
 
-    Generate Signed APKs using:
+If you have not Keystore then Generate Signed APKs using:
 
     keytool -genkeypair -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
 

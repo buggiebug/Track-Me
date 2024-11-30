@@ -1,7 +1,7 @@
 import { Image } from 'react-native';
 
 export default GetImage = (name, style) => {
-    const imageName = String(name).toLowerCase();
+    const imageName = String(name).split(" ").join("").toLowerCase();
     let imageSource;
     switch (imageName) {
         case "user":
@@ -15,7 +15,7 @@ export default GetImage = (name, style) => {
         case "amazonpay":
             imageSource = require('../../assets/images/banks/amazonpay.webp');
             break;
-        case "gpay":
+        case "googlepay":
             imageSource = require('../../assets/images/banks/gpay.webp');
             break;
         case "mobikwik":

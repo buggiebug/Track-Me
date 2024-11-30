@@ -5,7 +5,6 @@ import { getUser, logoutUser } from "../../redux/slice/authSlice";
 import GetImage from "../utils/GetImage";
 import { selectUserDetails } from "../../redux/reselect/reselectData";
 import { HelloWave } from "../animated/HelloWave";
-import localStorage from "@/components/utils/localStorage";
 
 export default ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -34,7 +33,7 @@ export default ProfileScreen = () => {
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View style={styles.header}>
           {GetImage("user", styles.avatar)}
-          <Text style={styles.name}>{userData?.name || "buggIe"}</Text>
+          <Text style={styles.name}>{userData?.name || "User"}</Text>
         </View>
 
         <View style={styles.detailsContainer}>
@@ -52,14 +51,14 @@ export default ProfileScreen = () => {
         </View>
       </View>
       {/* <View>
-                <TextInput
-                    style={styles.input}
-                    placeholder="URL"
-                    value={userToken}
-                    keyboardType="twitter"
-                    onChangeText={(value) => setUserToken(value)}
-                />
-                </View> */}
+        <TextInput
+            style={styles.input}
+            placeholder="URL"
+            value={userToken}
+            keyboardType="twitter"
+            onChangeText={(value) => setUserToken(value)}
+        />
+      </View> */}
       <Button title="Logout" onPress={() => handleSubmit()} />
     </View>
   );

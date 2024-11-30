@@ -6,11 +6,11 @@ import {
   View,
   RefreshControl,
 } from "react-native";
-import Icons from "../utils/Icons";
 import Utils from "../utils/utils";
 import GetImage from "../utils/GetImage";
 import { CustomModal } from "../layout/CustomModal";
 import { useState } from "react";
+import { FontAwesomeIcons } from "../utils/Icons";
 
 export default function TransactionList({ data, refreshing, onRefresh }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -57,7 +57,7 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
                 item?.borrowed && styles.borrowedText,
               ]}
             >
-              {Icons("rupee", styles.icon)} {item.amount}
+              <FontAwesomeIcons name="rupee" /> {item.amount}
             </Text>
           </View>
         </View>
@@ -74,45 +74,50 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       >
-        <View style={[{ display: "flex", flexDirection: "row", alignItems: "center", gap: 20}]}>
-          <View style={styles.imageContainer}>
-            {GetImage(
-              String(content.payUsing || content.lenderName)
-                .toLowerCase()
-                .split(" ")
-                .join(""),
-              styles.bankLogo
-            )}
+        <View>
+          <View style={[{ display: "flex", flexDirection: "row", alignItems: "center", gap: 20 }]}>
+            <View style={styles.imageContainer}>
+              {GetImage(
+                String(content.payUsing || content.lenderName)
+                  .toLowerCase()
+                  .split(" ")
+                  .join(""),
+                styles.bankLogo
+              )}
+            </View>
+            <Text style={styles.title}>
+              {content.payUsing || content.lenderName}
+            </Text>
           </View>
-          <Text style={styles.title}>
-            {content.payUsing || content.lenderName}
-          </Text>
+          <Text>Transaction Type : {content.transactionType}</Text>
+          <Text>Description: {content.description}</Text>
+          {content.notes && <Text>Notes: {content.notes}</Text>}
+          {content.recurring && <Text>Recurring: Yes</Text>}
+          {content.borrowed && (
+            <>
+              <Text>Borrowed: {content.borrowed ? "Yes" : "No"}</Text>
+              <Text>Borrow For: {content.borrowedType}</Text>
+              <Text>Lender Name: {content.lenderName}</Text>
+              <Text>Settled: {content.isSettled ? "Yes" : "No"}</Text>
+            </>
+          )}
+          <Text>Amount: {content.amount}</Text>
+          <Text>Status: {content.status}</Text>
+          <Text>Transaction Date: {Utils.getIndiaTime(content.transactionDate)}</Text>
         </View>
-        <Text>Transaction Type : {content.transactionType}</Text>
-        <Text>Description: {content.description}</Text>
-        {content.notes && <Text>Notes: {content.notes}</Text>}
-        {content.recurring && <Text>Recurring: Yes</Text>}
-        {content.borrowed && (
-          <>
-            <Text>Borrowed: {content.borrowed ? "Yes" : "No"}</Text>
-            <Text>Borrow For: {content.borrowedType}</Text>
-            <Text>Lender Name: {content.lenderName}</Text>
-            <Text>Settled: {content.isSettled ? "Yes" : "No"}</Text>
-          </>
-        )}
-        <Text>Amount: {content.amount}</Text>
-        <Text>Status: {content.status}</Text>
-        <Text>Transaction Date: {Utils.getIndiaTime(content.transactionDate)}</Text>
       </CustomModal>
 
       {/* ................ FlatList ............... */}
       <FlatList
         data={data}
         renderItem={renderTransaction}
-        key={data.id + 1}
+        keyExtractor={(item, idx) => `${item.id}-${idx}`}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={() => (
+          <Text style={styles.emptyListText}>No transactions found.</Text>
+        )}
       />
     </>
   );
@@ -210,4 +215,8 @@ const styles = StyleSheet.create({
   borrowedText: {
     color: "orange",
   },
+
+  emptyListText: {
+    color: "yellow",
+  }
 });

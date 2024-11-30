@@ -40,14 +40,14 @@ export default TransactionHome = () => {
             };
         } else {
             return {
-                expensesData: transactions,
+                expensesData: transactions || [],
                 expenseStats: {
-                    "totalIncome": 1200,
-                    "totalExpense": 156.25,
-                    "totalBorrowed": 500,
-                    "incomePercentage": 88,
-                    "expensePercentage": 12,
-                    "borrowedPercentage": 0,
+                    "totalIncome": 75000,
+                    "totalExpense": 5700,
+                    "totalBorrowed": 0,
+                    "incomePercentage": "92.95",
+                    "expensePercentage": "7.05",
+                    "borrowedPercentage": "0.00"
                 }
             };
         }
@@ -81,6 +81,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: "#0B192C",
         height: "100%",
+    },
+
+    header:{
+        marginBottom: 10,
     },
 
     headingText: {
