@@ -40,7 +40,7 @@ STEP 5:
 
 Run the Bundletool Command with Keystore 
 
-    java -jar bundletool-all-1.17.2.jar build-apks --bundle=expense_tracker.aab --output=expense_tracker.apks --mode=universal --ks=my-release-key.jks --ks-key-alias=my-key-alias --ks-pass=pass:12345678
+    java -jar bundletool-all-1.17.2.jar build-apks --bundle=ex1.aab --output=ex1.apks --mode=universal --ks=my-release-key.jks --ks-key-alias=my-key-alias --ks-pass=pass:12345678
 
 
 STEP 6:

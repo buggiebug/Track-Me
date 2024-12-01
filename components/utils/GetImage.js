@@ -4,13 +4,22 @@ export default GetImage = (name, style) => {
     const imageName = String(name).split(" ").join("").toLowerCase();
     let imageSource;
     switch (imageName) {
-        case "user":
-            imageSource = require('../../assets/images/avatar/user.png');
+        case "male":
+            imageSource = require('../../assets/images/avatar/male.png');
+            break;
+        case "female":
+            imageSource = require('../../assets/images/avatar/female.png');
+            break;
+        case "othergender":
+            imageSource = require('../../assets/images/avatar/othergender.png');
             break;
 
         // Bank Logos................................. 
         case "cash":
             imageSource = require('../../assets/images/banks/cash.webp');
+            break;
+        case "upi":
+            imageSource = require('../../assets/images/banks/upi.webp');
             break;
         case "amazonpay":
             imageSource = require('../../assets/images/banks/amazonpay.webp');

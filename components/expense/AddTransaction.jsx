@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, Button, Switch, StyleSheet, ScrollView } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Utils from '../utils/utils';
 import { createExpense } from '../../redux/slice/expenseSlice';
+import TransactionValidate from './validation/payload';
+import Notify from "@/components/utils/Notify";
+import { selectExpenseDetails } from "../../redux/reselect/reselectData";
 
 export default AddTransaction = () => {
+
+    const { loadingStatus, loadingModal } = useSelector(selectExpenseDetails);
 
     // Dynamic form
     const dynamicFor = "Borrowed";
@@ -52,9 +57,13 @@ export default AddTransaction = () => {
     }
 
     const submitForm = () => {
-        // Add validation and form submission logic here
-        dispatch(createExpense({ formData }));
-        handleClearForm();
+        const { errors } = TransactionValidate(formData);
+        if (errors.length > 0) {
+            Notify(errors[0], 1);
+        } else {
+            dispatch(createExpense({ formData }));
+            handleClearForm();
+        }
     };
 
     return (
@@ -264,7 +273,11 @@ export default AddTransaction = () => {
             </View>
 
             <View style={styles.submitButton} >
-                <Button title="Submit" onPress={submitForm} />
+                <Button
+                    onPress={submitForm}
+                    title={loadingStatus === "loading" && loadingModal === "createExpense" ? "Please wait..." : "Submit"}
+                    disabled={loadingStatus === "loading" && loadingModal === "createExpense" ? true : false}
+                />
                 <TouchableOpacity style={styles.resetButton} onPress={handleClearForm}>
                     <Text>Reset</Text>
                 </TouchableOpacity>

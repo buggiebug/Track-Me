@@ -1,9 +1,7 @@
-import localStorage from '@/components/utils/localStorage';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import Notify from '@/components/utils/Notify';
 
-
-import axio from "axios";
-const BASE_URL = "https://gprglhk7-4000.inc1.devtunnels.ms";
+import axiosInstance from "../api/axiosInstance";
 
 // Define initial state
 const initialState = {
@@ -19,16 +17,12 @@ export const getAllExpenses = createAsyncThunk(
   "expenses/getAllExpenses",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axio.get(`${BASE_URL}/user/expense`, {
-        headers: {
-          token: await localStorage.getItem('userToken')
-        }
-      });
+      const { data } = await axiosInstance.get(`/user/expense`);
       return data;
     } catch (error) {
-      console.log(error);
       // Capture error message and reject with value
       const errorMessage = error.response?.data?.message || error.message || "An unknown error occurred.";
+      Notify(errorMessage, 1)
       return rejectWithValue(errorMessage);
     }
   });
@@ -38,18 +32,14 @@ export const getAllExpenses = createAsyncThunk(
 export const createExpense = createAsyncThunk(
   "expenses/createExpense",
   async ({ formData }, { rejectWithValue }) => {
-    console.log(formData);
     try {
-      const { data } = await axio.post(`${BASE_URL}/user/expense/create`, formData, {
-        headers: {
-          token: await localStorage.getItem('userToken')
-        }
-      });
+      const { data } = await axiosInstance.post(`/user/expense/create`, formData);
+      Notify(data.message, 0)
       return data;
     } catch (error) {
       // Capture error message and reject with value
       const errorMessage = error.response?.data?.message || error.message || "An unknown error occurred.";
-      console.error(errorMessage);
+      Notify(errorMessage, 1)
       return rejectWithValue(errorMessage);
     }
   });

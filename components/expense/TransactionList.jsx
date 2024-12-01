@@ -45,7 +45,7 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
               {Utils.getIndiaTime(item.transactionDate)}
             </Text>
             <Text style={[styles.payUsing]}>
-              {item.payUsing || item.lenderName}
+              {item.lenderName && "Borrow from " }{item.payUsing || item.lenderName}
             </Text>
           </View>
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     padding: 10,
-    marginVertical: 10,
+    marginVertical: 5,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

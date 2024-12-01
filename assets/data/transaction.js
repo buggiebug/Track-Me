@@ -1,5 +1,13 @@
 const transactions = [
     {
+        id: 0,
+        image: 'https://via.placeholder.com/50',
+        description: 'Dummy Data',
+        transactionDate: '1999-09-05 17:15:00',
+        amount: 0,
+        payUsing: 'Cash',
+    },
+    {
         id: 1,
         image: 'https://via.placeholder.com/50',
         description: 'Monthly Grocery at Big Bazaar',

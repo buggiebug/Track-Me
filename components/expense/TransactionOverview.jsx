@@ -9,13 +9,23 @@ export default TransactionOverview = ({ expenseStats }) => {
 
     return (
         <ScrollView horizontal={true}>
-            <View style={[styles.transactionOverview, { width: isLargeScreen ? 480 : 550 }]}>
+            <View style={[styles.transactionOverview, { width: isLargeScreen ? 600 : 650 }]}>
+                <View style={styles.section}>
+                    <View style={styles.imageContainer}>
+                        <Text style={styles.imageText}>{expenseStats?.netBalance}</Text>
+                    </View>
+                    <View style={styles.textContainer}>
+                        <Text style={[styles.percentage, styles.incomeText]}>Current</Text>
+                        <Text style={[styles.percentage, styles.incomeText]}>Balance</Text>
+                    </View>
+                </View>
+
                 <View style={styles.section}>
                     <View style={styles.imageContainer}>
                         <Text style={styles.imageText}>{expenseStats?.totalIncome}</Text>
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={[styles.percentage, styles.incomeText]}>{expenseStats?.incomePercentage > 0 ? "+" : ""}{expenseStats?.incomePercentage}%</Text>
+                        <Text style={[styles.percentage, styles.incomeText]}>{expenseStats?.incomePercentage}%</Text>
                         <Text style={styles.label}>Income</Text>
                     </View>
                 </View>
@@ -25,7 +35,7 @@ export default TransactionOverview = ({ expenseStats }) => {
                         <Text style={styles.imageText}>{expenseStats?.totalExpense}</Text>
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={[styles.percentage, styles.expenseText]}>{expenseStats?.expensePercentage < 0 ? "-" : ""}{expenseStats?.expensePercentage}%</Text>
+                        <Text style={[styles.percentage, styles.expenseText]}>{expenseStats?.expensePercentage}%</Text>
                         <Text style={styles.label}>Expense</Text>
                     </View>
                 </View>
@@ -41,7 +51,6 @@ export default TransactionOverview = ({ expenseStats }) => {
                 </View>
             </View>
         </ScrollView>
-
     )
 }
 

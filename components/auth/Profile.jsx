@@ -5,6 +5,7 @@ import { getUser, logoutUser } from "../../redux/slice/authSlice";
 import GetImage from "../utils/GetImage";
 import { selectUserDetails } from "../../redux/reselect/reselectData";
 import { HelloWave } from "../animated/HelloWave";
+import Notify from "../utils/Notify";
 
 export default ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ export default ProfileScreen = () => {
   const handleSubmit = async () => {
     try {
       dispatch(logoutUser());
+      Notify("Logged Out", 0);
     } catch (error) {
       console.error("Error Logout User:", error);
     }
@@ -32,7 +34,14 @@ export default ProfileScreen = () => {
 
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View style={styles.header}>
-          {GetImage("user", styles.avatar)}
+          {userData?.gender === "male" ? (
+            GetImage("male", styles.avatar)
+          ) :
+            userData?.gender === "female" ? (
+              GetImage("female", styles.avatar)
+            ):
+            GetImage("othergender", styles.avatar)
+          }
           <Text style={styles.name}>{userData?.name || "User"}</Text>
         </View>
 

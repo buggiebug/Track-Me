@@ -5,19 +5,17 @@ import { TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-const BASE_URL = "https://gprglhk7-4000.inc1.devtunnels.ms";
-
-export default Login = () => {
+export default Login = ({handleToggle}) => {
 
   const dispatch = useDispatch();
   const { loadingStatus, loadingModal, isLoggedInUser } = useSelector(selectUserDetails);
 
   const [loginDataState, setLoginDataState] = useState({ mobile: "9120226043", password: "12345678" });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  
+
   const submitLogin = async () => {
     try {
-      console.log("isLoggedInUser >>>>", isLoggedInUser);
+      // console.log("isLoggedInUser >>>>", isLoggedInUser);
       dispatch(loginUser(loginDataState));
     } catch (error) {
       console.error(error);
@@ -67,28 +65,24 @@ export default Login = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.signup}>
+          <Text style={[styles.button, styles.signupButton]} onPress={()=>{handleToggle("signup")}}>Signup</Text>
+        </View>
       </View>
 
       <View style={styles.buttons}>
         <TouchableOpacity
-          onPress={() => setLoginDataState({ mobile: "", password: "" })}
-          disabled={!(loginDataState.mobile || loginDataState.password) ? true : false}
-          style={[styles.button, { backgroundColor: !(loginDataState.mobile || loginDataState.password) ? '#686D76' : '#FF6347' }]}
-        >
-          <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
           onPress={submitLogin}
           style={[
             styles.button,
-            { backgroundColor: loginDataState.mobile.length < 10 || loginDataState.password?.length < 8 ? '#686D76' : '#4CAF50' } // Green color for Submit
+            { backgroundColor: loginDataState.mobile.length < 10 || loginDataState.password?.length < 8 ? '#686D76' : '#4CAF50' }, // Green color for Submit
+            loadingStatus === "loading" && loadingModal === "login" && { backgroundColor: "#686D76" }
           ]}
           disabled={loginDataState.mobile.length < 10 || !loginDataState.password}
         >
-        <Text style={styles.buttonText} disabled={loadingStatus === "loading" && loadingModal === "login" ? true : false }>
-          {loadingStatus === "loading" && loadingModal === "login" ? "Loading..." : "Submit"}
-        </Text>
+          <Text style={[styles.buttonText]} disabled={loadingStatus === "loading" && loadingModal === "login" ? true : false}>
+            {loadingStatus === "loading" && loadingModal === "login" ? "Loading..." : "Login"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -158,7 +152,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginTop: 10,
   },
   button: {
     padding: 10,
@@ -168,6 +161,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: 'bold',        
+    textDecorationStyle: "dashed",
+    textTransform: "uppercase",
   },
+
+  signupButton: {
+    color: "#fff",
+    textDecorationLine: "underline",
+    textAlign: "right",
+  }
 })

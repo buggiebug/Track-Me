@@ -1,8 +1,7 @@
 import localStorage from '@/components/utils/localStorage';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axio from "axios";
-
-const BASE_URL = "https://gprglhk7-4000.inc1.devtunnels.ms";
+import axiosInstance from "../api/axiosInstance";
+import Notify from '@/components/utils/Notify';
 
 // Define initial state
 const initialState = {
@@ -13,22 +12,38 @@ const initialState = {
   error: null,
 };
 
+// Create User...
+export const signupUser = createAsyncThunk(
+  'auth/signupUser',
+  async (credentials) => {
+    try {
+      const { data } = await axiosInstance.post(`/auth/signup`, credentials);
+      Notify(data.message, 0)
+      return data;
+    } catch (error) {
+      const err = error?.response?.data?.message || error?.message
+      Notify(err, 1)
+    }
+  }
+);
+
 // Login User...
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials) => {
     try {
-      const { data } = await axio.post(`${BASE_URL}/auth/login`, credentials);
+      const { data } = await axiosInstance.post(`/auth/login`, credentials);
+      Notify(data.message, 0)
       return data;
     } catch (error) {
-      console.error(error);
+      const err = error?.response?.data?.message || error?.message
+      Notify(err, 1)
     }
   }
 );
 
 // Logout User...
 export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
-  console.log("Logged Out");
   await localStorage.removeItem("userToken");
   return { isLoggedIn: false };
 });
@@ -36,17 +51,11 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
 // Get User...
 export const getUser = createAsyncThunk("auth/getUser", async () => {
   try {
-    const token = await localStorage.getItem("userToken");
-    if(token.length > 0){
-      const { data } = await axio.get(`${BASE_URL}/auth/user/me`, {
-        headers: {
-          token
-        }
-      });
-      return data?.data;
-    }
+    const { data } = await axiosInstance.get(`/auth/user/me`);
+    return data?.data;
   } catch (error) {
-    console.error(error);
+    const err = error?.response?.data?.message || error?.message
+    Notify(err, 1)
   }
 });
 
@@ -57,6 +66,25 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
+      //  Handle signupUser
+      .addCase(signupUser.pending, (state) => {
+        state.loadingStatus = 'loading';
+        state.loadingModal = 'signup';
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.loadingStatus = 'succeeded';
+        state.loadingModal = 'signup';
+        if (action.payload?.data) {
+          state.isLoggedIn = true;
+          localStorage.setItem("userToken", action.payload?.data);
+        }
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.loadingStatus = 'failed';
+        state.loadingModal = 'signup';
+        state.error = action.error.message;
+      })
+
       //  Handle loginUser
       .addCase(loginUser.pending, (state) => {
         state.loadingStatus = 'loading';
@@ -65,7 +93,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loadingStatus = 'succeeded';
         state.loadingModal = 'login';
-        if(action.payload?.data?.token){
+        if (action.payload?.data?.token) {
           state.isLoggedIn = true;
           localStorage.setItem("userToken", action.payload?.data?.token);
         }

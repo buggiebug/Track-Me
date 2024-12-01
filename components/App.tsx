@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import { useSelector } from "react-redux";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "react-native";
-import Login from "@/components/auth/Login";
+import Auth from "@/components/auth/Auth";
 import localStorage from "@/components/utils/localStorage";
 import { selectUserDetails } from "../redux/reselect/reselectData";
 
@@ -23,7 +23,7 @@ export default function App() {
     });
 
     useEffect(() => {
-        console.log("isLoggedInUser >>>", isLoggedInUser);
+        // console.log("isLoggedInUser >>>", isLoggedInUser);
         const checkToken = async () => {
             const token = await localStorage.getItem("userToken");
             setIsAuthenticated(!!token);
@@ -40,7 +40,7 @@ export default function App() {
     return (
         <>
             {
-                !isAuthenticated ? <Login /> :
+                !isAuthenticated ? <Auth /> :
                     <>
                         <SafeAreaProvider>
                             <SafeAreaView style={{ flex: 1 }}>
