@@ -11,6 +11,7 @@ import { getAllExpenses } from "../../redux/slice/expenseSlice";
 import { selectExpenseDetails } from "../../redux/reselect/reselectData";
 import { Picker } from "@react-native-picker/picker";
 import Notify from "../utils/Notify";
+import { getUser } from "@/redux/slice/authSlice";
 
 export default TransactionHome = () => {
 
@@ -34,19 +35,21 @@ export default TransactionHome = () => {
         if (loadingStatus === "succeeded" && loadingModal === "getAllExpenses") {
             setRefreshing(false);
         }
+
+        dispatch(getUser());
     }, [loadingStatus, loadingModal]);
 
     const { expensesData, expenseStats } = useMemo(() => {
         const data = {
             expensesData: transactions || [],
             expenseStats: {
-                "netBalance": 69300,
-                "totalIncome": 75000,
-                "totalExpense": 5700,
+                "netBalance": 0,
+                "totalIncome": 0,
+                "totalExpense": 0,
                 "totalBorrowed": 0,
-                "incomePercentage": "92.95",
-                "expensePercentage": "7.05",
-                "borrowedPercentage": "0.00"
+                "incomePercentage": "0",
+                "expensePercentage": "0",
+                "borrowedPercentage": "0"
             }
         };
 

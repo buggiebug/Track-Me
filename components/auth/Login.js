@@ -4,21 +4,30 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import Notify from '../utils/Notify';
+import { FontAwesomeIcons } from '../utils/Icons';
 
 export default Login = ({handleToggle}) => {
 
   const dispatch = useDispatch();
   const { loadingStatus, loadingModal, isLoggedInUser } = useSelector(selectUserDetails);
 
-  const [loginDataState, setLoginDataState] = useState({ mobile: "9120226043", password: "12345678" });
+  const [loginDataState, setLoginDataState] = useState({ mobile: "", password: "" });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const submitLogin = async () => {
     try {
       // console.log("isLoggedInUser >>>>", isLoggedInUser);
+      if(loginDataState.mobile.length !== 10) throw "Mobile number must be 10 digits long";
+      if (isNaN(loginDataState.mobile)) throw "Enter a valid mobile number";
+      const firstDigit = loginDataState.mobile[0];
+      if (!(firstDigit === '9' || firstDigit === '7' || firstDigit === '8' || firstDigit === '6')) throw "Enter a valid mobile number";
+
+      if(loginDataState.password.length < 8) throw "Password must be 8 characters long";
+
       dispatch(loginUser(loginDataState));
     } catch (error) {
-      console.error(error);
+      Notify(error, 0);
     }
   }
 
@@ -37,7 +46,7 @@ export default Login = ({handleToggle}) => {
             keyboardType='number-pad'
             numberOfLines={1}
             maxLength={10}
-            placeholder='9120226043'
+            placeholder='Enter your mobile number'
             onChangeText={text => setLoginDataState({ ...loginDataState, mobile: text })}
             value={loginDataState.mobile}
             style={styles.input}
@@ -49,7 +58,7 @@ export default Login = ({handleToggle}) => {
           <TextInput
             editable
             secureTextEntry={!isPasswordVisible}
-            placeholder='********'
+            placeholder="Enter your password"
             numberOfLines={1}
             maxLength={10}
             onChangeText={text => setLoginDataState({ ...loginDataState, password: text })}
@@ -61,7 +70,7 @@ export default Login = ({handleToggle}) => {
             style={styles.toggleButton}
           >
             <Text style={styles.toggleText}>
-              {isPasswordVisible ? "Hide" : "Show"}
+              {isPasswordVisible ? <FontAwesomeIcons name="eye-slash" /> : <FontAwesomeIcons name="eye" />}
             </Text>
           </TouchableOpacity>
         </View>
@@ -142,8 +151,8 @@ const styles = StyleSheet.create({
   },
 
   toggleText: {
-    color: '#4CAF50',
-    fontWeight: 'bold',
+    color: '#ccc',
+    fontWeight: '500',
   },
 
   // Buttons...

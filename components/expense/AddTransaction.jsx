@@ -57,7 +57,8 @@ export default AddTransaction = () => {
     }
 
     const submitForm = () => {
-        const { errors } = TransactionValidate(formData);
+        const { errors, data } = TransactionValidate(formData);
+        // console.log(errors, data);
         if (errors.length > 0) {
             Notify(errors[0], 1);
         } else {

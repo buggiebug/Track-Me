@@ -12,6 +12,11 @@ const TransactionValidate = (data) => {
     if (!amount) {
         success = false; errors.push("Amount required");
     }
+
+    if (Number(amount) <= 0) {
+        success = false; errors.push("Enter a valid amount");
+    }
+
     if (transactionType && !['Income', 'Expense', 'Borrowed'].includes(transactionType)) {
         success = false; errors.push("Transaction Type required");
     }

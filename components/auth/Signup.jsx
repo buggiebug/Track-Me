@@ -5,20 +5,33 @@ import { TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Picker } from "@react-native-picker/picker";
+import Notify from '../utils/Notify';
+import { FontAwesomeIcons } from '../utils/Icons';
 
 export default function Signup({ handleToggle }) {
 
     const dispatch = useDispatch();
     const { loadingStatus, loadingModal } = useSelector(selectUserDetails);
 
-    const [loginDataState, setLoginDataState] = useState({ name: "", mobile: "", gender: "Male", password: "" });
+    const [loginDataState, setLoginDataState] = useState({ name: "", mobile: "", gender: "", password: "" });
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const submitLogin = async () => {
         try {
+            if (loginDataState.name.length < 3) throw "Name must be 3 characters long";
+            if (!loginDataState.gender) throw "Gender must be selected";
+
+            if (loginDataState.mobile.length !== 10) throw "Mobile number must be 10 digits long";
+            if (isNaN(loginDataState.mobile)) throw "Enter a valid mobile number";
+            const firstDigit = loginDataState.mobile[0];
+            if (!(firstDigit === '9' || firstDigit === '7' || firstDigit === '8' || firstDigit === '6')) throw "Enter a valid mobile number";
+
+            if (loginDataState.password.length < 8) throw "Password must be 8 characters long";
+
+            loginDataState.name = loginDataState.name.trim();
             dispatch(signupUser(loginDataState));
         } catch (error) {
-            console.error(error);
+            Notify(error, 0);
         }
     }
 
@@ -36,7 +49,7 @@ export default function Signup({ handleToggle }) {
                         editable
                         keyboardType='twitter'
                         numberOfLines={1}
-                        placeholder='Shubham Mishra'
+                        placeholder='Enter your name'
                         onChangeText={text => setLoginDataState({ ...loginDataState, name: text })}
                         value={loginDataState.name}
                         style={styles.input}
@@ -48,10 +61,16 @@ export default function Signup({ handleToggle }) {
                         <Text style={styles.filterLabel}>Gender</Text>
                         <View style={styles.transactionFilterText}>
                             <Picker
-                                selectedValue={loginDataState?.gender}
-                                onValueChange={(value) => setLoginDataState({ ...loginDataState, gender: value })}
+                                selectedValue={loginDataState?.gender || "Select"} // Fallback to "Select"
+                                onValueChange={(value) =>
+                                    setLoginDataState((prevState) => ({
+                                        ...prevState,
+                                        gender: value !== "Select" ? value : null, // Avoid storing "Select"
+                                    }))
+                                }
                                 style={styles.picker}
                             >
+                                <Picker.Item label="Select" value="Select" />
                                 <Picker.Item label="Male" value="Male" />
                                 <Picker.Item label="Female" value="Female" />
                                 <Picker.Item label="Other" value="Other" />
@@ -66,7 +85,7 @@ export default function Signup({ handleToggle }) {
                         keyboardType='number-pad'
                         numberOfLines={1}
                         maxLength={10}
-                        placeholder='9120226043'
+                        placeholder='Enter your mobile number'
                         onChangeText={text => setLoginDataState({ ...loginDataState, mobile: text })}
                         value={loginDataState.mobile}
                         style={styles.input}
@@ -78,7 +97,7 @@ export default function Signup({ handleToggle }) {
                     <TextInput
                         editable
                         secureTextEntry={!isPasswordVisible}
-                        placeholder='********'
+                        placeholder="Enter your password"
                         numberOfLines={1}
                         maxLength={10}
                         onChangeText={text => setLoginDataState({ ...loginDataState, password: text })}
@@ -90,7 +109,7 @@ export default function Signup({ handleToggle }) {
                         style={styles.toggleButton}
                     >
                         <Text style={styles.toggleText}>
-                            {isPasswordVisible ? "Hide" : "Show"}
+                            {isPasswordVisible ? <FontAwesomeIcons name="eye-slash" /> : <FontAwesomeIcons name="eye" />}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -103,7 +122,7 @@ export default function Signup({ handleToggle }) {
                 <TouchableOpacity
                     onPress={() => setLoginDataState({ mobile: "", password: "" })}
                     disabled={(!(loginDataState.mobile || loginDataState.password) || (loadingStatus === "loading" && loadingModal === "signup")) ? true : false}
-                    style={[styles.button, { backgroundColor: (!(loginDataState.mobile || loginDataState.password) || (loadingStatus === "loading" && loadingModal === "signup"))  ? '#686D76' : '#FF6347' }]}
+                    style={[styles.button, { backgroundColor: (!(loginDataState.mobile || loginDataState.password) || (loadingStatus === "loading" && loadingModal === "signup")) ? '#686D76' : '#FF6347' }]}
                 >
                     <Text style={styles.buttonText}>Reset</Text>
                 </TouchableOpacity>
@@ -180,9 +199,9 @@ const styles = StyleSheet.create({
     },
 
     toggleText: {
-        color: '#4CAF50',
-        fontWeight: 'bold',
-    },
+        color: '#ccc',
+        fontWeight: '500',
+      },
 
     // Buttons...
     buttons: {
