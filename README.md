@@ -1,14 +1,27 @@
 # Welcome to Expense Tracker app 👋
 
-## Get started
 
-1. Install dependencies
+### Download the apk from [Google Drive](https://drive.google.com/drive/folders/1LBcar6plmqPFoRJs6AcoW0EB8nobNeEX?usp=drive_link)
+
+
+#####   or
+
+### Get started with developmnet environment
+
+## Steps
+
+1. Clone the repo
+
+    ```bash 
+    git clone https://github.com/buggiebug/Expense-Tracker.git
+    ```
+2. Install dependencies
 
    ```bash
    npm i / npm ci
    ```
 
-2. Start the app
+3. Start the app
 
    ```bash
     npm run start
@@ -40,7 +53,7 @@ STEP 5:
 
 Run the Bundletool Command with Keystore 
 
-    java -jar bundletool-all-1.17.2.jar build-apks --bundle=ex1.aab --output=ex1.apks --mode=universal --ks=my-release-key.jks --ks-key-alias=my-key-alias --ks-pass=pass:12345678
+    java -jar bundletool-all-1.17.2.jar build-apks --bundle=expense-tracker.aab --output=expense-tracker.apks --mode=universal --ks=my-release-key.jks --ks-key-alias=my-key-alias --ks-pass=pass:12345678
 
 
 STEP 6:
