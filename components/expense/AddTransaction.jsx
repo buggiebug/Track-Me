@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, Button, Switch, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Utils from '../utils/utils';
-import { createExpense } from '../../redux/slice/expenseSlice';
+import { createExpense, getAllExpenses } from '../../redux/slice/expenseSlice';
 import TransactionValidate from './validation/payload';
 import Notify from "@/components/utils/Notify";
 import { selectExpenseDetails } from "../../redux/reselect/reselectData";
+import { useLocalSearchParams } from "expo-router";
 
 export default AddTransaction = () => {
+
+    const { bill } = useLocalSearchParams();
 
     const { loadingStatus, loadingModal } = useSelector(selectExpenseDetails);
 
@@ -25,6 +28,7 @@ export default AddTransaction = () => {
         amount: '',
         transactionType: 'Expense',
         isSettled: false,
+        oldBillId: '',
         lenderName: "",
         borrowedType: "Self",
         discount: '',
@@ -64,8 +68,34 @@ export default AddTransaction = () => {
         } else {
             dispatch(createExpense({ formData }));
             handleClearForm();
+            dispatch(getAllExpenses());
         }
     };
+
+    useEffect(() => {
+        if(!bill) return;
+        const billData = JSON.parse(bill);
+        if(billData?._id) {
+            setFormData({
+                ...formInitialState,
+                description: billData?.description,
+                amount: String(billData?.amount),
+                transactionType: billData?.transactionType,
+                isSettled: true,
+                oldBillId: billData?._id,
+                lenderName: billData?.lenderName,
+                borrowedType: billData?.borrowedType,
+                payUsing: billData?.payUsing,
+                notes: billData?.notes,
+                upiId: billData?.upiId,
+                accountNumber: billData?.accountNumber,
+                recurring: billData?.recurring,
+                status: billData?.status,
+                transactionDate: '',
+            });
+            setReadDateState('');
+        }
+    }, [bill]);
 
     return (
         <ScrollView style={styles.container}>
@@ -74,7 +104,7 @@ export default AddTransaction = () => {
             </View> */}
 
             <View>
-                <Text style={styles.label}>Description</Text>
+                <Text style={styles.label}>Description <Text style={styles.important}>*</Text></Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Enter description"
@@ -84,7 +114,7 @@ export default AddTransaction = () => {
                     enterKeyHint='Buy a iPhone'
                 />
 
-                <Text style={styles.label}>Amount</Text>
+                <Text style={styles.label}>Amount <Text style={styles.important}>*</Text></Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Enter amount"
@@ -121,7 +151,7 @@ export default AddTransaction = () => {
                             </View>
 
 
-                            <Text style={styles.label}>Lender Name</Text>
+                            <Text style={styles.label}>Lender Name <Text style={styles.important}>*</Text></Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Lender Name"
@@ -168,7 +198,7 @@ export default AddTransaction = () => {
                 {
                     (formData.transactionType !== dynamicFor || formData.isSettled) &&
                     <View>
-                        <Text style={styles.label}>Pay Using</Text>
+                        <Text style={styles.label}>Pay Using <Text style={styles.important}>*</Text></Text>
                         <Picker
                             selectedValue={formData.payUsing}
                             onValueChange={(value) => handleInputChange('payUsing', value)}
@@ -193,7 +223,7 @@ export default AddTransaction = () => {
                 {
                     formData.transactionType !== dynamicFor &&
                     <View>
-                        <Text style={styles.label}>Category</Text>
+                        <Text style={styles.label}>Category <Text style={styles.important}>*</Text></Text>
                         <TextInput
                             style={styles.input}
                             placeholder="Enter category"
@@ -254,7 +284,7 @@ export default AddTransaction = () => {
                     <Picker.Item label="Failed" value="Failed" />
                 </Picker>
 
-                <Text style={styles.label}>Date</Text>
+                <Text style={styles.label}>Date <Text style={styles.important}>*</Text></Text>
                 <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
                     <TextInput
                         style={styles.input}
@@ -305,6 +335,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
 
+    important:{
+        fontSize: 14,
+        fontWeight: 'thin',
+        color: "red",
+    },
     label: {
         fontSize: 16,
         fontWeight: 'bold',

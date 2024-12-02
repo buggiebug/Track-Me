@@ -87,8 +87,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     imageText: {
+        fontSize: 12,
+        padding: 10,
         color: '#6c757d',
         fontWeight: '600',
+        textAlign: "center",
     },
 
     // Text Container...

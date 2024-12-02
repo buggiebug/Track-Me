@@ -11,6 +11,8 @@ import GetImage from "../utils/GetImage";
 import { CustomModal } from "../layout/CustomModal";
 import { useState } from "react";
 import { FontAwesomeIcons } from "../utils/Icons";
+import { Button } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function TransactionList({ data, refreshing, onRefresh }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,6 +21,15 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
     setModalVisible(true);
     setContent(item);
   };
+
+  const router = useRouter();
+
+  const handlePayBorrowedBill = async (bill) => {
+    if(Object.keys(bill).length) {
+      setModalVisible(false);
+      router.push({ pathname: "/(tabs)/add-transaction", params: { bill: JSON.stringify(bill) } });
+    }
+  }
 
   // ................ Render Transaction ................
   const renderTransaction = ({ item }) => (
@@ -45,7 +56,7 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
               {Utils.getIndiaTime(item.transactionDate)}
             </Text>
             <Text style={[styles.payUsing]}>
-              {item.lenderName && "Borrow from " }{item.payUsing || item.lenderName}
+              {item.lenderName && "Borrow from "}{item.payUsing || item.lenderName}
             </Text>
           </View>
 
@@ -104,6 +115,14 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
           <Text>Amount: {content.amount}</Text>
           <Text>Status: {content.status}</Text>
           <Text>Transaction Date: {Utils.getIndiaTime(content.transactionDate)}</Text>
+
+          {
+            content.borrowed && !content.isSettled && (
+              <View style={{ marginVertical: 40 }}>
+                <Button title="Pay Bill" onPress={() => { handlePayBorrowedBill(content) }} color={"green"} />
+              </View>
+            )
+          }
         </View>
       </CustomModal>
 

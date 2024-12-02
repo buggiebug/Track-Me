@@ -27,7 +27,7 @@ const TransactionValidate = (data) => {
         }
     }
 
-    if (!payUsing && transactionType !== "Borrowed") {
+    if (!payUsing ) {
         success = false; errors.push("Pay Using required");
     }
     if (!category && transactionType !== "Borrowed") {
