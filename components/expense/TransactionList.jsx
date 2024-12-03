@@ -25,7 +25,7 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
   const router = useRouter();
 
   const handlePayBorrowedBill = async (bill) => {
-    if(Object.keys(bill).length) {
+    if (Object.keys(bill).length) {
       setModalVisible(false);
       router.push({ pathname: "/(tabs)/add-transaction", params: { bill: JSON.stringify(bill) } });
     }
@@ -55,9 +55,14 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
             <Text style={styles.transactionDate}>
               {Utils.getIndiaTime(item.transactionDate)}
             </Text>
-            <Text style={[styles.payUsing]}>
-              {item.lenderName && "Borrow from "}{item.payUsing || item.lenderName}
-            </Text>
+            <View style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+              <Text style={[styles.payUsing]}>
+                {item.lenderName && "Borrow from "}{item.payUsing || item.lenderName}
+              </Text>
+              <Text style={[styles.payUsing, {}]}>
+                {item.borrowed && item.totalBorrowedAmount ? `Total: ${item.totalBorrowedAmount}` : ""}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.amountContainer}>
@@ -110,9 +115,12 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
               <Text>Borrow For: {content.borrowedType}</Text>
               <Text>Lender Name: {content.lenderName}</Text>
               <Text>Settled: {content.isSettled ? "Yes" : "No"}</Text>
+              <Text>Total Borrowed: {content.totalBorrowedAmount}</Text>
+              <Text>Last Paid: {content.lastPaidAmount}</Text>
+              <Text>Remaining Amount: {content.amount}</Text>
             </>
           )}
-          <Text>Amount: {content.amount}</Text>
+          {!content.borrowed && <Text>Amount: {content.amount}</Text>}
           <Text>Status: {content.status}</Text>
           <Text>Transaction Date: {Utils.getIndiaTime(content.transactionDate)}</Text>
 

@@ -12,6 +12,16 @@ const initialState = {
   message: ','
 };
 
+export const clearState = createAsyncThunk(
+  "expenses/clearState",
+  async (_, { rejectWithValue }) => {
+    initialState.loadingModal = "";
+    initialState.loadingStatus = "idle";
+    initialState.error = null;
+    initialState.message = "";
+  }
+);
+
 // Get ALl Expenses...
 export const getAllExpenses = createAsyncThunk(
   "expenses/getAllExpenses",

@@ -25,9 +25,12 @@ const TransactionValidate = (data) => {
         if (!lenderName) {
             success = false; errors.push("Lender Name required");
         }
+        if(isSettled && !payUsing) {
+            success = false; errors.push("Pay Using required");
+        }
     }
 
-    if (!payUsing ) {
+    if (!payUsing && transactionType !== "Borrowed"){
         success = false; errors.push("Pay Using required");
     }
     if (!category && transactionType !== "Borrowed") {

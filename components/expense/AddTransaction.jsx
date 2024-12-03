@@ -3,16 +3,17 @@ import { View, TouchableOpacity, Text, TextInput, Button, Switch, StyleSheet, Sc
 import { useDispatch, useSelector } from 'react-redux';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import Utils from '../utils/utils';
-import { createExpense, getAllExpenses } from '../../redux/slice/expenseSlice';
 import TransactionValidate from './validation/payload';
 import Notify from "@/components/utils/Notify";
 import { selectExpenseDetails } from "../../redux/reselect/reselectData";
-import { useLocalSearchParams } from "expo-router";
+import { clearState, createExpense, getAllExpenses } from '../../redux/slice/expenseSlice';
 
 export default AddTransaction = () => {
 
     const { bill } = useLocalSearchParams();
+    const router = useRouter();
 
     const { loadingStatus, loadingModal } = useSelector(selectExpenseDetails);
 
@@ -22,6 +23,7 @@ export default AddTransaction = () => {
     const dispatch = useDispatch();
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [readDateState, setReadDateState] = useState('');
+    const [oldBillData, setOldBillData] = useState({});
 
     const formInitialState = {
         description: '',
@@ -58,6 +60,8 @@ export default AddTransaction = () => {
     const handleClearForm = () => {
         setFormData({ ...formInitialState });
         setReadDateState("");
+        router.setParams({bill:""});
+        setOldBillData({ ...formInitialState });
     }
 
     const submitForm = () => {
@@ -67,35 +71,45 @@ export default AddTransaction = () => {
             Notify(errors[0], 1);
         } else {
             dispatch(createExpense({ formData }));
+            dispatch(clearState());
             handleClearForm();
-            dispatch(getAllExpenses());
         }
     };
 
     useEffect(() => {
-        if(!bill) return;
+        if(loadingStatus==="succeeded" && loadingModal === "createExpense"){
+            dispatch(getAllExpenses());
+        }
+    },[loadingStatus, loadingModal]);
+
+    useEffect(() => {
+        if (!bill) return;
         const billData = JSON.parse(bill);
-        if(billData?._id) {
+        setOldBillData(billData);
+    }, [bill]);
+
+    useEffect(() => {
+        if (oldBillData?._id) {
             setFormData({
                 ...formInitialState,
-                description: billData?.description,
-                amount: String(billData?.amount),
-                transactionType: billData?.transactionType,
+                description: oldBillData?.description,
+                amount: String(oldBillData?.amount),
+                transactionType: oldBillData?.transactionType,
                 isSettled: true,
-                oldBillId: billData?._id,
-                lenderName: billData?.lenderName,
-                borrowedType: billData?.borrowedType,
-                payUsing: billData?.payUsing,
-                notes: billData?.notes,
-                upiId: billData?.upiId,
-                accountNumber: billData?.accountNumber,
-                recurring: billData?.recurring,
-                status: billData?.status,
+                oldBillId: oldBillData?._id,
+                lenderName: oldBillData?.lenderName,
+                borrowedType: oldBillData?.borrowedType,
+                payUsing: oldBillData?.payUsing,
+                notes: oldBillData?.notes,
+                upiId: oldBillData?.upiId,
+                accountNumber: oldBillData?.accountNumber,
+                recurring: oldBillData?.recurring,
+                status: oldBillData?.status,
                 transactionDate: '',
             });
             setReadDateState('');
         }
-    }, [bill]);
+    }, [oldBillData]);
 
     return (
         <ScrollView style={styles.container}>
@@ -104,7 +118,7 @@ export default AddTransaction = () => {
             </View> */}
 
             <View>
-                <Text style={styles.label}>Description <Text style={styles.important}>*</Text></Text>
+                <Text style={styles.label}>Description {!oldBillData?._id && <Text style={styles.important}>*</Text>}</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Enter description"
@@ -112,6 +126,7 @@ export default AddTransaction = () => {
                     value={formData.description}
                     onChangeText={(value) => handleInputChange('description', value)}
                     enterKeyHint='Buy a iPhone'
+                    readOnly={oldBillData?._id ? true : false}
                 />
 
                 <Text style={styles.label}>Amount <Text style={styles.important}>*</Text></Text>
@@ -128,6 +143,7 @@ export default AddTransaction = () => {
                     selectedValue={formData.transactionType}
                     onValueChange={(value) => handleInputChange('transactionType', value)}
                     style={styles.picker}
+                    enabled={oldBillData?._id ? false : true}
                 >
                     <Picker.Item label="Expense" value="Expense" />
                     <Picker.Item label="Income" value="Income" />
@@ -138,26 +154,32 @@ export default AddTransaction = () => {
                     formData.transactionType === dynamicFor ?
                         <View>
 
-                            <Text style={styles.label}>Settlement</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ paddingHorizontal: 10 }}>No</Text>
-                                <Switch
-                                    value={formData.isSettled}
-                                    onValueChange={(value) => handleInputChange('isSettled', value)}
-                                    trackColor={{ true: '#5DA271', false: 'grey' }}
-                                    thumbColor={formData.isSettled ? '#5DA271' : 'grey'}
-                                />
-                                <Text style={{ paddingHorizontal: 10 }}>Yes</Text>
-                            </View>
+                            {oldBillData?._id &&
+                                <>
+                                    <Text style={styles.label}>Settlement</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Text style={{ paddingHorizontal: 10 }}>No</Text>
+                                        <Switch
+                                            value={formData.isSettled}
+                                            onValueChange={(value) => handleInputChange('isSettled', value)}
+                                            trackColor={{ true: '#5DA271', false: 'grey' }}
+                                            thumbColor={formData.isSettled ? '#5DA271' : 'grey'}
+                                            disabled={oldBillData?._id ? true : false}
+                                        />
+                                        <Text style={{ paddingHorizontal: 10 }}>Yes</Text>
+                                    </View>
+                                </>
+                            }
 
 
-                            <Text style={styles.label}>Lender Name <Text style={styles.important}>*</Text></Text>
+                            <Text style={styles.label}>Lender Name {!oldBillData?._id && <Text style={styles.important}>*</Text>}</Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Lender Name"
                                 keyboardType="twitter"
                                 value={formData.lenderName}
                                 onChangeText={(value) => handleInputChange('lenderName', value)}
+                                readOnly={oldBillData?._id ? true : false}
                             />
 
                             <Text style={styles.label}>Borrowed For</Text>
@@ -165,6 +187,7 @@ export default AddTransaction = () => {
                                 selectedValue={formData.borrowedType}
                                 onValueChange={(value) => handleInputChange('borrowedType', value)}
                                 style={styles.picker}
+                                enabled={oldBillData?._id ? false : true}
                             >
                                 <Picker.Item label="Self" value="Self" />
                                 <Picker.Item label="Friend" value="Friend" />
@@ -248,30 +271,35 @@ export default AddTransaction = () => {
                     onChangeText={(value) => handleInputChange('location', value)}
                 /> */}
 
-                <Text style={styles.label}>Notes</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Additional notes"
-                    value={formData.notes}
-                    onChangeText={(value) => handleInputChange('notes', value)}
-                />
+                {
+                    !oldBillData?._id &&
+                    <>
+                        <Text style={styles.label}>Notes</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Additional notes"
+                            value={formData.notes}
+                            onChangeText={(value) => handleInputChange('notes', value)}
+                        />
 
-                <Text style={styles.label}>UPI ID</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter UPI ID"
-                    value={formData.upiId}
-                    onChangeText={(value) => handleInputChange('upiId', value)}
-                />
+                        <Text style={styles.label}>UPI ID</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter UPI ID"
+                            value={formData.upiId}
+                            onChangeText={(value) => handleInputChange('upiId', value)}
+                        />
 
-                <Text style={styles.label}>Account Number</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter account number"
-                    keyboardType="numeric"
-                    value={formData.accountNumber}
-                    onChangeText={(value) => handleInputChange('accountNumber', value)}
-                />
+                        <Text style={styles.label}>Account Number</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter account number"
+                            keyboardType="numeric"
+                            value={formData.accountNumber}
+                            onChangeText={(value) => handleInputChange('accountNumber', value)}
+                        />
+                    </>
+                }
 
                 <Text style={styles.label}>Status</Text>
                 <Picker
@@ -335,7 +363,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
 
-    important:{
+    important: {
         fontSize: 14,
         fontWeight: 'thin',
         color: "red",

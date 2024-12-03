@@ -12,11 +12,11 @@ export default TransactionOverview = ({ expenseStats }) => {
             <View style={[styles.transactionOverview, { width: isLargeScreen ? 600 : 650 }]}>
                 <View style={styles.section}>
                     <View style={styles.imageContainer}>
-                        <Text style={styles.imageText}>{expenseStats?.netBalance}</Text>
+                        <Text style={[styles.imageText, expenseStats?.netBalance < 0 ? styles.expenseText : styles.incomeText]}>{expenseStats?.netBalance}</Text>
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={[styles.percentage, styles.incomeText]}>Current</Text>
-                        <Text style={[styles.percentage, styles.incomeText]}>Balance</Text>
+                        <Text style={[styles.percentage, expenseStats?.netBalance < 0 ? styles.expenseText : styles.incomeText]}>Current</Text>
+                        <Text style={[styles.percentage, expenseStats?.netBalance < 0 ? styles.expenseText : styles.incomeText]}>Balance</Text>
                     </View>
                 </View>
 
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         width: 60,
     },
     percentage: {
-        fontSize: 16,
+        fontSize: 13,
         fontWeight: 'bold',
 
     },
