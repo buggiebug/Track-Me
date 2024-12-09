@@ -1,9 +1,12 @@
+import { selectUserDetails } from '@/redux/reselect/reselectData';
 import { ScrollView, useWindowDimensions } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native'
+import { useSelector } from 'react-redux';
 
 
 
 export default TransactionOverview = ({ expenseStats }) => {
+    const { userData } = useSelector(selectUserDetails);
     const { width } = useWindowDimensions();
     const isLargeScreen = width < 480;
 
@@ -12,11 +15,11 @@ export default TransactionOverview = ({ expenseStats }) => {
             <View style={[styles.transactionOverview, { width: isLargeScreen ? 600 : 650 }]}>
                 <View style={styles.section}>
                     <View style={styles.imageContainer}>
-                        <Text style={[styles.imageText, expenseStats?.netBalance < 0 ? styles.expenseText : styles.incomeText]}>{expenseStats?.netBalance}</Text>
+                        <Text style={[styles.imageText, String(expenseStats?.netBalance).includes("-") ? styles.expenseText : styles.incomeText]}>{expenseStats?.netBalance}</Text>
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={[styles.percentage, expenseStats?.netBalance < 0 ? styles.expenseText : styles.incomeText]}>Current</Text>
-                        <Text style={[styles.percentage, expenseStats?.netBalance < 0 ? styles.expenseText : styles.incomeText]}>Balance</Text>
+                        <Text style={[styles.percentage, String(expenseStats?.netBalance).includes("-") ? styles.expenseText : styles.incomeText]}>Current</Text>
+                        <Text style={[styles.percentage, String(expenseStats?.netBalance).includes("-") ? styles.expenseText : styles.incomeText]}>Balance</Text>
                     </View>
                 </View>
 
@@ -40,15 +43,19 @@ export default TransactionOverview = ({ expenseStats }) => {
                     </View>
                 </View>
 
-                <View style={styles.section}>
-                    <View style={styles.imageContainer}>
-                        <Text style={styles.imageText}>{expenseStats?.totalBorrowed}</Text>
+                {
+                    (Array.isArray(userData?.settings?.expenseTrackService?.transactionType) && 
+                    userData?.settings?.expenseTrackService?.transactionType.includes("borrowed")) &&
+                    <View style={styles.section}>
+                        <View style={styles.imageContainer}>
+                            <Text style={styles.imageText}>{expenseStats?.totalBorrowed}</Text>
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text style={[styles.percentage, styles.borrowedText]}>{expenseStats?.borrowedPercentage > 0 ? "+" : ""}{expenseStats?.borrowedPercentage}%</Text>
+                            <Text style={styles.label}>Borrowed</Text>
+                        </View>
                     </View>
-                    <View style={styles.textContainer}>
-                        <Text style={[styles.percentage, styles.borrowedText]}>{expenseStats?.borrowedPercentage > 0 ? "+" : ""}{expenseStats?.borrowedPercentage}%</Text>
-                        <Text style={styles.label}>Borrowed</Text>
-                    </View>
-                </View>
+                }
             </View>
         </ScrollView>
     )

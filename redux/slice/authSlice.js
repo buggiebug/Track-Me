@@ -2,6 +2,7 @@ import localStorage from '@/components/utils/localStorage';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from "../api/axiosInstance";
 import Notify from '@/components/utils/Notify';
+import { getAllExpenses } from './expenseSlice';
 
 // Define initial state
 const initialState = {
@@ -58,6 +59,23 @@ export const getUser = createAsyncThunk("auth/getUser", async () => {
     Notify(err, 1)
   }
 });
+
+// Update User...
+export const updateUser = createAsyncThunk(
+  "auth/updateUser",
+  async (credentials, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.patch(`/auth/user/me/update`, credentials);
+      thunkAPI.dispatch(getAllExpenses());
+      return data?.data;
+    } catch (error) {
+      const err = error?.response?.data?.message || error?.message;
+      Notify(err, 1);
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
 
 const authSlice = createSlice({
   name: 'auth',
@@ -126,6 +144,22 @@ const authSlice = createSlice({
       .addCase(getUser.rejected, (state, action) => {
         state.loadingStatus = 'failed';
         state.loadingModal = 'getUser';
+        state.error = action.error.message;
+      })
+
+      //  Update user
+      .addCase(updateUser.pending, (state) => {
+        state.loadingStatus = 'loading';
+        state.loadingModal = 'updateUser';
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loadingStatus = 'succeeded';
+        state.loadingModal = 'updateUser';
+        state.userData = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loadingStatus = 'failed';
+        state.loadingModal = 'updateUser';
         state.error = action.error.message;
       });
   },

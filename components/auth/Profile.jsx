@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logoutUser } from "../../redux/slice/authSlice";
 import GetImage from "../utils/GetImage";
 import { selectUserDetails } from "../../redux/reselect/reselectData";
 import { HelloWave } from "../animated/HelloWave";
 import Notify from "../utils/Notify";
+import UserSetting from "./settings/UserSettings";
 
 export default ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -25,51 +26,51 @@ export default ProfileScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.headingText}>Profile</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.headingText}>Profile</Text>
 
-      <HelloWave />
+        <HelloWave />
 
-      <Text style={styles.loadingStatus}>{loadingStatus}</Text>
+        <Text style={styles.loadingStatus}>{loadingStatus}</Text>
 
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <View style={styles.header}>
-          {userData?.gender === "male" ? (
-            GetImage("male", styles.avatar)
-          ) :
-            userData?.gender === "female" ? (
-              GetImage("female", styles.avatar)
-            ):
-            GetImage("othergender", styles.avatar)
-          }
-          <Text style={styles.name}>{userData?.name || "User"}</Text>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <View style={styles.header}>
+            {userData?.gender === "male" ? (
+              GetImage("male", styles.avatar)
+            ) :
+              userData?.gender === "female" ? (
+                GetImage("female", styles.avatar)
+              ) :
+                GetImage("othergender", styles.avatar)
+            }
+            <Text style={styles.name}>{userData?.name || "User"}</Text>
+          </View>
+
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailItem}>
+              <Text style={styles.label}>Mobile:</Text>
+              <Text style={styles.value}>{userData?.mobile || "9120226043"}</Text>
+            </View>
+
+            <View style={styles.detailItem}>
+              <Text style={styles.label}>Joined:</Text>
+              <Text style={styles.value}>
+                {new Date(userData?.createdAt || Date.now()).toLocaleDateString("en-US")}
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={{margin:20}}>
+          <Button title="Logout" onPress={() => handleSubmit()} />
         </View>
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailItem}>
-            <Text style={styles.label}>Mobile:</Text>
-            <Text style={styles.value}>{userData?.mobile || "9120226043"}</Text>
-          </View>
-
-          <View style={styles.detailItem}>
-            <Text style={styles.label}>Joined:</Text>
-            <Text style={styles.value}>
-              {new Date(userData?.createdAt || Date.now()).toLocaleDateString("en-US")}
-            </Text>
-          </View>
+        {/* User Setting      */}
+        <View style={{ marginTop: 20, width: "100%" }}>
+          <UserSetting userData={userData}/>
         </View>
       </View>
-      {/* <View>
-        <TextInput
-            style={styles.input}
-            placeholder="URL"
-            value={userToken}
-            keyboardType="twitter"
-            onChangeText={(value) => setUserToken(value)}
-        />
-      </View> */}
-      <Button title="Logout" onPress={() => handleSubmit()} />
-    </View>
+    </ScrollView>
   );
 };
 

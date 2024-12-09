@@ -2,7 +2,7 @@ import axios from 'axios';
 import localStorage from '../../components/utils/localStorage';
 
 const axiosInstance = axios.create({
-  baseURL: "https://gprglhk7-4000.inc1.devtunnels.ms",
+  baseURL: "https://expense-tracker-be-kbp1.onrender.com",
   timeout: 20000,
   headers: {
     'Content-Type': 'application/json',

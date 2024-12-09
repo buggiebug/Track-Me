@@ -2,47 +2,51 @@ import { Image } from 'react-native';
 
 export default GetImage = (name, style) => {
     const imageName = String(name).split(" ").join("").toLowerCase();
+    const imageNames = [
+        "male", "female", "othergender", "cash", "upi", "amazonpay", "googlepay", "mobikwik", "paypal",
+        "paytm", "phonepe", "imps", "slice"];
+
     let imageSource;
     switch (imageName) {
-        case "male":
+        case imageNames[0]:
             imageSource = require('../../assets/images/avatar/male.png');
             break;
-        case "female":
+        case imageNames[1]:
             imageSource = require('../../assets/images/avatar/female.png');
             break;
-        case "othergender":
+        case imageNames[2]:
             imageSource = require('../../assets/images/avatar/othergender.png');
             break;
 
         // Bank Logos................................. 
-        case "cash":
+        case imageNames[3]:
             imageSource = require('../../assets/images/banks/cash.webp');
             break;
-        case "upi":
+        case imageNames[4]:
             imageSource = require('../../assets/images/banks/upi.webp');
             break;
-        case "amazonpay":
+        case imageNames[5]:
             imageSource = require('../../assets/images/banks/amazonpay.webp');
             break;
-        case "googlepay":
+        case imageNames[6]:
             imageSource = require('../../assets/images/banks/gpay.webp');
             break;
-        case "mobikwik":
+        case imageNames[7]:
             imageSource = require('../../assets/images/banks/mobiKwik.webp');
             break;
-        case "paypal":
+        case imageNames[8]:
             imageSource = require('../../assets/images/banks/paypal.webp');
             break;
-        case "paytm":
+        case imageNames[9]:
             imageSource = require('../../assets/images/banks/paytm.webp');
             break;
-        case "phonepay":
+        case imageNames[10]:
             imageSource = require('../../assets/images/banks/phonepay.webp');
             break;
-        case "imps":
+        case imageNames[11]:
             imageSource = require('../../assets/images/banks/imps.webp');
             break;
-        case "slice":
+        case imageNames[12]:
             imageSource = require('../../assets/images/banks/slice.webp');
             break;
         default:
