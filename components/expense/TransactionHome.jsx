@@ -13,8 +13,12 @@ import { Picker } from "@react-native-picker/picker";
 import Notify from "../utils/Notify";
 import { getUser } from "@/redux/slice/authSlice";
 
-export default TransactionHome = () => {
+import FloatingButton from "../layout/FloatingButton";
+import { Icons } from "../utils/Icons";
+import { useRouter } from "expo-router";
 
+export default TransactionHome = () => {
+    const router = useRouter();
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false);
     const { loadingStatus, loadingModal, expenseData } = useSelector(selectExpenseDetails);
@@ -73,6 +77,11 @@ export default TransactionHome = () => {
         return data;
     }, [expenseData?.expenses, transactions, filterTransactionState]);
 
+
+    const navigateToAddTransaction = () => {
+        router.push("/transaction/add-transaction");
+    }
+
     return (
         <View style={[styles.container]}>
 
@@ -105,6 +114,15 @@ export default TransactionHome = () => {
             <View style={styles.transactionList}>
                 <TransactionList data={expensesData} refreshing={refreshing} onRefresh={onRefresh} />
             </View>
+
+            {/* Add Transaction */}
+            <FloatingButton style={styles.floatingButton} handlePress={navigateToAddTransaction}>
+                <Icons
+                    name={'add-circle-outline'}
+                    color={"white"}
+                    onMagicTap={()=>{Navigator.navigate("add-transaction")}}
+                /> 
+            </FloatingButton>
         </View>
     )
 };
@@ -169,5 +187,17 @@ const styles = StyleSheet.create({
     transactionList: {
         height: "80%",
         paddingBottom: 55,
-    }
+    },
+
+
+    // Floating Button...
+    floatingButton:{
+        width: 50,
+        height: 50,
+        right: 15,
+        backgroundColor: "#4CAF50",
+        borderColor: "#4CAF50",
+        borderRadius: 100,
+        borderWidth: 1,
+    },
 });

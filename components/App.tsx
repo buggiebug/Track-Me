@@ -6,6 +6,7 @@ import { StatusBar } from "react-native";
 import Auth from "@/components/auth/Auth";
 import localStorage from "@/components/utils/localStorage";
 import { selectUserDetails } from "../redux/reselect/reselectData";
+import AddTransaction from "./expense/AddTransaction";
 
 export default function App() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -51,6 +52,7 @@ export default function App() {
                                 />
                                 <Stack>
                                     <Stack.Screen name="(tabs)" options={{ title: "Home", headerShown: false }} />
+                                    <Stack.Screen name="transaction/add-transaction" options={{ title: "Add Transaction" }} />
                                     <Stack.Screen name="+not-found" />
                                 </Stack>
                             </SafeAreaView>

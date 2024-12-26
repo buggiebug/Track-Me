@@ -27,7 +27,7 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
   const handlePayBorrowedBill = async (bill) => {
     if (Object.keys(bill).length) {
       setModalVisible(false);
-      router.push({ pathname: "/(tabs)/add-transaction", params: { bill: JSON.stringify(bill) } });
+      router.push({ pathname: "/transaction/add-transaction", params: { bill: JSON.stringify(bill) } });
     }
   }
 
