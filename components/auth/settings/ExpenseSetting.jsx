@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     },
 
     transactionType: {
-        gap: 10,
+        gap: 25,
     },
 
     expenseType: {
@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
     customDate: {},
 
     dateContainer: {
+        marginBottom: 10,
         gap: 0,
     },
 });
