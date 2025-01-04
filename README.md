@@ -1,4 +1,4 @@
-# Welcome to Expense Tracker app 👋
+# Welcome to Track Me app 👋
 
 
 ### Download the apk from [Google Drive](https://drive.google.com/drive/folders/1LBcar6plmqPFoRJs6AcoW0EB8nobNeEX?usp=drive_link)
@@ -13,7 +13,7 @@
 1. Clone the repo
 
     ```bash 
-    git clone https://github.com/buggiebug/Expense-Tracker.git
+    git clone https://github.com/buggiebug/Track-Me.git
     ```
 2. Install dependencies
 
@@ -53,7 +53,7 @@ STEP 5:
 
 Run the Bundletool Command with Keystore 
 
-    java -jar bundletool-all-1.17.2.jar build-apks --bundle=expense-tracker.aab --output=expense-tracker.apks --mode=universal --ks=my-release-key.jks --ks-key-alias=my-key-alias --ks-pass=pass:12345678
+    java -jar bundletool-all-1.17.2.jar build-apks --bundle=track_me.aab --output=track_me.apks --mode=universal --ks=my-release-key.jks --ks-key-alias=my-key-alias --ks-pass=pass:12345678
 
 
 STEP 6:
@@ -62,7 +62,7 @@ STEP 6:
 
     The .apks file is a ZIP archive. You can manually extract its contents to locate the universal APK:
 
-    1. Rename expense_tracker.apks to expense_tracker.zip.
+    1. Rename track_me.apks to track_me.zip.
     2. Extract it using any ZIP tool.
     3. Find the universal APK in the universal directory.
 
