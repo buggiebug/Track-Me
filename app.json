@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "My Expenses",
-    "slug": "expense-tracker",
+    "name": "Track me",
+    "slug": "track-me",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/expense_icon.png",
+    "icon": "./assets/images/track_me_icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/expense_splash.png",
+      "image": "./assets/images/track_me_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,10 +17,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/expense_icon.png",
+        "foregroundImage": "./assets/images/track_me_icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.buggiebug.expensetracker",
+      "package": "com.buggiebug.track_me",
       "jsEngine": "hermes",
       "newArchitecture": true
     },
@@ -41,8 +41,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "0d3c73c6-fe48-4d42-a1d5-1afee9f3c8ec"
+        "projectId": "a4288fe3-d4fa-4fe7-a976-dc6a2fa1ef3f"
       }
-    }
+    },
+    "owner": "buggiebug"
   }
 }
