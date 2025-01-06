@@ -70,7 +70,7 @@ export default function TransactionList({ data, refreshing, onRefresh }) {
               style={[
                 styles.amount,
                 item.amount < 0 ? styles.expense : styles.income,
-                item?.borrowed && styles.borrowedText,
+                (item?.borrowed && Number(item.amount) > 0) && styles.borrowedText,
               ]}
             >
               <FontAwesomeIcons name="rupee" /> {item.amount}

@@ -18,7 +18,7 @@ export default AddTransaction = () => {
     const { loadingStatus, loadingModal } = useSelector(selectExpenseDetails);
 
     // Dynamic form
-    const dynamicFor = "Borrowed";
+    const transactionBorrowed = "Borrowed";
 
     const dispatch = useDispatch();
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -60,7 +60,7 @@ export default AddTransaction = () => {
     const handleClearForm = () => {
         setFormData({ ...formInitialState });
         setReadDateState("");
-        router.setParams({bill:""});
+        router.setParams({ bill: "" });
         setOldBillData({ ...formInitialState });
     }
 
@@ -77,10 +77,10 @@ export default AddTransaction = () => {
     };
 
     useEffect(() => {
-        if(loadingStatus==="succeeded" && loadingModal === "createExpense"){
+        if (loadingStatus === "succeeded" && loadingModal === "createExpense") {
             dispatch(getAllExpenses());
         }
-    },[loadingStatus, loadingModal]);
+    }, [loadingStatus, loadingModal]);
 
     useEffect(() => {
         if (!bill) return;
@@ -118,6 +118,18 @@ export default AddTransaction = () => {
             </View> */}
 
             <View>
+
+                <Text style={styles.label}>Transaction Type</Text>
+                <Picker
+                    selectedValue={formData.transactionType}
+                    onValueChange={(value) => handleInputChange('transactionType', value)}
+                    style={styles.picker}
+                    enabled={oldBillData?._id ? false : true}
+                >
+                    <Picker.Item label="Expense" value="Expense" />
+                    <Picker.Item label="Income" value="Income" />
+                    <Picker.Item label="Borrowed" value="Borrowed" />
+                </Picker>
                 <Text style={styles.label}>Description {!oldBillData?._id && <Text style={styles.important}>*</Text>}</Text>
                 <TextInput
                     style={styles.input}
@@ -138,88 +150,70 @@ export default AddTransaction = () => {
                     onChangeText={(value) => handleInputChange('amount', value)}
                 />
 
-                <Text style={styles.label}>Transaction Type</Text>
-                <Picker
-                    selectedValue={formData.transactionType}
-                    onValueChange={(value) => handleInputChange('transactionType', value)}
-                    style={styles.picker}
-                    enabled={oldBillData?._id ? false : true}
-                >
-                    <Picker.Item label="Expense" value="Expense" />
-                    <Picker.Item label="Income" value="Income" />
-                    <Picker.Item label="Borrowed" value="Borrowed" />
-                </Picker>
-
                 {
-                    formData.transactionType === dynamicFor ?
-                        <View>
-
-                            {oldBillData?._id &&
-                                <>
-                                    <Text style={styles.label}>Settlement</Text>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text style={{ paddingHorizontal: 10 }}>No</Text>
-                                        <Switch
-                                            value={formData.isSettled}
-                                            onValueChange={(value) => handleInputChange('isSettled', value)}
-                                            trackColor={{ true: '#5DA271', false: 'grey' }}
-                                            thumbColor={formData.isSettled ? '#5DA271' : 'grey'}
-                                            disabled={oldBillData?._id ? true : false}
-                                        />
-                                        <Text style={{ paddingHorizontal: 10 }}>Yes</Text>
-                                    </View>
-                                </>
-                            }
-
-
-                            <Text style={styles.label}>Lender Name {!oldBillData?._id && <Text style={styles.important}>*</Text>}</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Lender Name"
-                                keyboardType="twitter"
-                                value={formData.lenderName}
-                                onChangeText={(value) => handleInputChange('lenderName', value)}
-                                readOnly={oldBillData?._id ? true : false}
-                            />
-
-                            <Text style={styles.label}>Borrowed For</Text>
-                            <Picker
-                                selectedValue={formData.borrowedType}
-                                onValueChange={(value) => handleInputChange('borrowedType', value)}
-                                style={styles.picker}
-                                enabled={oldBillData?._id ? false : true}
-                            >
-                                <Picker.Item label="Self" value="Self" />
-                                <Picker.Item label="Friend" value="Friend" />
-                                <Picker.Item label="Family" value="Family" />
-                                <Picker.Item label="Others" value="Others" />
-                            </Picker>
-
-                        </View>
-                        :
-                        <View>
-                            <Text style={styles.label}>Discount</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter discount amount"
-                                keyboardType="numeric"
-                                value={formData.discount}
-                                onChangeText={(value) => handleInputChange('discount', value)}
-                            />
-
-                            <Text style={styles.label}>Cashback</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter cashback amount"
-                                keyboardType="numeric"
-                                value={formData.cashback}
-                                onChangeText={(value) => handleInputChange('cashback', value)}
-                            />
-                        </View>
+                    <>
+                        <Text style={styles.label}>Notes</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Additional notes"
+                            value={formData.notes}
+                            onChangeText={(value) => handleInputChange('notes', value)}
+                        />
+                    </>
                 }
 
                 {
-                    (formData.transactionType !== dynamicFor || formData.isSettled) &&
+                    formData.transactionType === transactionBorrowed &&
+                    <View>
+                        <Text style={styles.label}>Lender Name {!oldBillData?._id && <Text style={styles.important}>*</Text>}</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter Lender Name"
+                            keyboardType="twitter"
+                            value={formData.lenderName}
+                            onChangeText={(value) => handleInputChange('lenderName', value)}
+                            readOnly={oldBillData?._id ? true : false}
+                        />
+
+                        {
+                            !oldBillData?._id  && <>
+                                <Text style={styles.label}>Borrowed For</Text>
+                                <Picker
+                                    selectedValue={formData.borrowedType}
+                                    onValueChange={(value) => handleInputChange('borrowedType', value)}
+                                    style={styles.picker}
+                                    enabled={oldBillData?._id ? false : true}
+                                >
+                                    <Picker.Item label="Self" value="Self" />
+                                    <Picker.Item label="Friend" value="Friend" />
+                                    <Picker.Item label="Family" value="Family" />
+                                    <Picker.Item label="Others" value="Others" />
+                                </Picker>
+                            </>
+                        }
+
+
+                        {oldBillData?._id &&
+                            <>
+                                <Text style={styles.label}>Settlement</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ paddingHorizontal: 10 }}>No</Text>
+                                    <Switch
+                                        value={formData.isSettled}
+                                        onValueChange={(value) => handleInputChange('isSettled', value)}
+                                        trackColor={{ true: '#5DA271', false: 'grey' }}
+                                        thumbColor={formData.isSettled ? '#5DA271' : 'grey'}
+                                        disabled={oldBillData?._id ? true : false}
+                                    />
+                                    <Text style={{ paddingHorizontal: 10 }}>Yes</Text>
+                                </View>
+                            </>
+                        }
+                    </View>
+                }
+
+                {
+                    (formData.transactionType !== transactionBorrowed || formData.isSettled) &&
                     <View>
                         <Text style={styles.label}>Pay Using <Text style={styles.important}>*</Text></Text>
                         <Picker
@@ -244,7 +238,7 @@ export default AddTransaction = () => {
                 }
 
                 {
-                    formData.transactionType !== dynamicFor &&
+                    formData.transactionType !== transactionBorrowed &&
                     <View>
                         <Text style={styles.label}>Category <Text style={styles.important}>*</Text></Text>
                         <TextInput
@@ -270,36 +264,6 @@ export default AddTransaction = () => {
                     value={formData.location}
                     onChangeText={(value) => handleInputChange('location', value)}
                 /> */}
-
-                {
-                    !oldBillData?._id &&
-                    <>
-                        <Text style={styles.label}>Notes</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Additional notes"
-                            value={formData.notes}
-                            onChangeText={(value) => handleInputChange('notes', value)}
-                        />
-
-                        <Text style={styles.label}>UPI ID</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Enter UPI ID"
-                            value={formData.upiId}
-                            onChangeText={(value) => handleInputChange('upiId', value)}
-                        />
-
-                        <Text style={styles.label}>Account Number</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Enter account number"
-                            keyboardType="numeric"
-                            value={formData.accountNumber}
-                            onChangeText={(value) => handleInputChange('accountNumber', value)}
-                        />
-                    </>
-                }
 
                 <Text style={styles.label}>Status</Text>
                 <Picker

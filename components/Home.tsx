@@ -9,7 +9,6 @@ const Home = () => {
     // const data_2 = [2200, 1800, 2400, 2000];
     return (
         <>
-            <Text>Home</Text>
             <LineChartModal labels={labels} data={data} legend={["Monthly"]} />
         </>
     )
